@@ -1,0 +1,9 @@
+item_id,item_name,category,unit,quantity_on_hand,daily_use,reorder_level
+C101,Espresso beans,Coffee,kg,4,1.5,3
+C102,Decaf beans,Coffee,kg,six,0.3,2
+C103,Cold brew concentrate,Coffee,L,2,-1.2,3
+D201,,Dairy,L,18,10,12
+D202,Oat milk,Dairy,L,30,6,12
+D202,Oat milk (duplicate),Dairy,L,25,6,12
+T302,Matcha powder,Tea,kg,0.4,0.1
+S402,Caramel syrup,Syrups,bottle,1,0.4,2

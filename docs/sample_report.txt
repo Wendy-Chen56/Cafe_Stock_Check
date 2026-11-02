@@ -1,0 +1,14 @@
+Cafe Stock Check - report for sample_inventory.csv
+Rules: ORDER SOON = stock lasts 3 days or less. Order target = the higher of 7 days of use or twice the reorder level.
+Items checked: 20 | REORDER NOW: 4 | ORDER SOON: 3 | OK: 13
+
+Items that need attention:
+Item                   Category   On hand   Use/day  Days left  Status       Suggest order
+---------------------  ---------  --------  -------  ---------  -----------  -------------
+Cold brew concentrate  Coffee     2 L       1.2      1.7        REORDER NOW  7 L
+Caramel syrup          Syrups     1 bottle  0.4      2.5        REORDER NOW  3 bottle
+Matcha powder          Tea        0.4 kg    0.1      4          REORDER NOW  1 kg
+Sanitizer wipes        Cleaning   2 pack    0.5      4          REORDER NOW  2 pack
+Whole milk             Dairy      18 L      10       1.8        ORDER SOON   52 L
+12oz cups              Packaging  8 sleeve  3        2.7        ORDER SOON   13 sleeve
+Espresso beans         Coffee     4 kg      1.5      2.7        ORDER SOON   7 kg

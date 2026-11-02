@@ -1,0 +1,16 @@
+# Python files created during execution
+__pycache__/
+*.py[cod]
+
+# Local environments
+.venv/
+venv/
+
+# Generated order lists
+reorder_list*.csv
+output/
+
+# Local settings
+.env
+.DS_Store
+Thumbs.db
