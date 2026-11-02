@@ -35,31 +35,20 @@ Follow the installation instructions. After installing Python, close and reopen 
 
 ## 2. Download the project
 
-On the GitHub page containing this project:
+1. Open https://github.com/Wendy-Chen56/Cafe_Stock_Check.
+2. Click the green **Code** button.
+3. Select **Download ZIP**.
+4. Find the downloaded ZIP file, right-click it, and select **Extract All**.
+5. Open the extracted folder, usually named `Cafe_Stock_Check-main`.
 
-1. Click the green **Code** button.
-2. Select **Download ZIP**.
-3. Find the downloaded ZIP file.
-4. Right-click it and select **Extract All**.
-5. Open the extracted folder and find `cafe-stock-check`.
+The project folder should contain `README.md`, `data`, `src`, and `docs`. Make sure you extract the ZIP before running the program.
 
-If you downloaded the whole course repository, the project may be inside that repository's folder.
-
-The correct project folder contains:
-
-- `README.md`
-- `.gitignore`
-- `data`
-- `src`
-- `docs`
-
-Extract the files before running the program.
 
 ## 3. Open the project in VS Code
 
 1. Open VS Code.
 2. Select **File → Open Folder**.
-3. Choose the `cafe-stock-check` folder.
+3. Choose the extracted `Cafe_Stock_Check-main` folder, or the project folder containing `README.md`, `data`, and `src`.
 4. Click **Select Folder**.
 5. If a trust prompt appears, confirm that you opened the project you intended to download.
 
