@@ -5,14 +5,14 @@ import math
 import sys
 
 from pathlib import Path
-from inventory_store import save_inventory
+
 
 import streamlit as st
 
 BASE_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE_DIR / "src"))
 
-
+from inventory_store import save_inventory
 from load_data import read_csv_rows
 from validate_data import DataError, check_columns, validate_rows
 from reports import analyze_items, count_by_status, sort_items
@@ -223,7 +223,13 @@ try:
         styled_report = report_df.style.apply(
             color_status,
             subset=["Status"],
-        )
+        ).format({
+            "On hand": "{:.1f}",
+            "Daily use": "{:.1f}",
+            "Days left": "{:.1f}",
+            "Suggested order": "{:.0f}",
+        }, na_rep="-")
+        
 
         st.dataframe(styled_report, hide_index=True)
     else:
