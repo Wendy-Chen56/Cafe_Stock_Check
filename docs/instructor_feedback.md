@@ -1,31 +1,56 @@
-# Instructor Feedback and Improvement Plan
+# Instructor Feedback and Project Updates
 
-## What came up in the meeting
+## Feedback from the meeting
 
-During the meeting, my professor asked me to explain the project as if she owned a coffee shop. I focused too much on the CSV file and Python code. I needed to show what a café worker would actually use and why it would help them.
+During the meeting, Professor Solis asked me to explain the project as if she owned a coffee shop. I spent too much time talking about the CSV and Python files instead of showing what a café worker would use.
 
-Professor Solis suggested two main improvements: show the report in a web browser and give workers a form for entering inventory instead of editing a spreadsheet.
+She suggested showing the report in a browser and adding a form so workers would not have to edit a spreadsheet. She also suggested dropdowns for items and sizes, automatic categories, and red, yellow, and green stock indicators.
 
-She also pointed out that workers could mistype item names or have trouble maintaining unique item IDs. She suggested dropdowns for items and sizes, with the system already knowing the category. For the report, she suggested red, yellow, and green status indicators.
+She questioned why cold brew with 1.7 days left was marked REORDER NOW while whole milk with 1.8 days left was marked ORDER SOON. I needed to make the reason behind each status clearer.
 
-Another question was why cold brew with 1.7 days left was marked REORDER NOW while whole milk with 1.8 days left was marked ORDER SOON. I need to make the reason behind each status easier to understand.
+## What I changed
 
-## What I plan to change
+I added a Streamlit browser app that uses the original stock calculations.
 
-I plan to use Streamlit to build a browser interface around the existing calculations.
+Workers can now select an item from a dropdown. The app displays its category and stock unit automatically, so they do not need to type an item ID or name.
 
-Workers will select an existing item and enter its current stock. The system will fill in its ID, category, and unit. Where package sizes are offered, the program will convert the entered amount into the item's stock unit.
+The stock form lets workers enter the total quantity on hand and save it. Dairy items also have an example 2 L container option. The app converts container counts into liters before calculating the report.
 
-The report will show the stock status with both color and text. It will also explain why an item needs attention. Workers will be able to review and export the reorder list from the browser.
+The report now has colored status cells and a Reason column. Workers can filter by category, show only items needing attention, and download the reorder list.
 
-## How I will check the changes
+Saved counts go into a separate working inventory file. The original sample stays available for demonstrations and checks. I also updated the README and added the required packages.
 
-I will compare the browser report with the current program using the same sample data. The default results should still be 4 REORDER NOW, 3 ORDER SOON, and 13 OK.
+## What I checked
 
-I will also check that stock updates are saved and remain available after reopening the application. Invalid quantities should show a clear message without changing the saved inventory.
+I ran the browser app locally and checked these results:
 
-Finally, I will ask a classmate to select an item, update its stock, and find the reorder list. I will record any help they need and anything they find confusing.
+| Check | Result |
+| --- | --- |
+| Original sample | 20 items: 4 REORDER NOW, 3 ORDER SOON, 13 OK |
+| Save Whole milk as 25 L | Report showed 2.5 days left and a suggested order of 45 L |
+| Refresh after saving | Whole milk stayed at 25 L; Oat milk remained at 30 L |
+| Enter three 2 L containers | Saved 6 L; report showed 0.6 days, REORDER NOW, and a suggested order of 64 L |
+| Switch entry methods and refresh | Direct entry showed 6 L; container entry showed 3 |
+| Status colors | Red, yellow, and green appeared with the status labels |
+| Download the reorder list | CSV contained the updated milk values |
+| Download with Dairy selected | CSV contained only Whole milk under the tested stock counts |
+| Bakery with attention-only selected | No matching items; download button was disabled |
+| Package dependency check | No broken requirements found |
 
-## Current status
+These are my local checks. They do not show measured time or cost savings.
 
-These changes are planned. I will add the completed changes, test results, and any further feedback after implementing them.
+## What I learned
+
+The meeting helped me see that explaining the code is different from showing someone how a product helps them. I can now demonstrate the task directly: select an item, enter a count, save it, and review what needs ordering.
+
+The status explanation also matters. Similar days-left values can have different statuses because the program checks each item's reorder level first.
+
+## What still needs checking
+
+A classmate previously followed the command-line README and got the program running in about four minutes. That was a setup check for the earlier version.
+
+I still need someone to try the browser version and tell me whether the form and report are clear. I also need to check invalid stock entry and confirm that saved counts remain after stopping and restarting the app.
+
+The browser app runs locally and still needs Python and the packages installed on the host computer. It has not been deployed as a public website.
+
+These updates have been implemented and checked locally. I have not yet received Professor Solis's review of this version.
