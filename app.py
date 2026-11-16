@@ -1,13 +1,18 @@
+import csv
+import io
+import pandas as pd
 import math
 import sys
+
 from pathlib import Path
+from inventory_store import save_inventory
 
 import streamlit as st
 
 BASE_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE_DIR / "src"))
 
-from inventory_store import save_inventory
+
 from load_data import read_csv_rows
 from validate_data import DataError, check_columns, validate_rows
 from reports import analyze_items, count_by_status, sort_items
@@ -56,17 +61,47 @@ try:
         f"Stock unit: {selected_item['unit']}"
     )
 
+    unit = selected_item["unit"]
+    package_sizes = {f"Enter directly in {unit}": 1.0}
+
+    # Example package size for the fictional dairy inventory.
+    if selected_item["category"] == "Dairy" and unit == "L":
+        package_sizes["2 L container"] = 2.0
+
+    selected_package = st.selectbox(
+        "How are you counting this item?",
+        options=list(package_sizes),
+        key=f"package_{selected_item_id}",
+    )
+
+    package_size = package_sizes[selected_package]
+    direct_entry = selected_package == f"Enter directly in {unit}"
+
+    input_label = (
+        f"Total stock on hand ({unit})"
+        if direct_entry
+        else "Total containers on hand (partial containers allowed)"
+    )
+
+    st.caption(
+        "Enter the total stock currently on hand, not an amount to add. "
+        "The 2 L option is a demo package size."
+    )
+
     with st.form("stock_update_form"):
-        new_quantity = st.number_input(
-            f"Stock on hand ({selected_item['unit']})",
+        entered_amount = st.number_input(
+            input_label,
             min_value=0.0,
-            value=float(selected_item["quantity_on_hand"]),
+            value=float(selected_item["quantity_on_hand"]) / package_size,
             step=0.1,
-            key=f"quantity_{selected_item_id}",
+            key=f"quantity_{selected_item_id}_{selected_package}",
         )
 
         submitted = st.form_submit_button("Save stock")
 
+    new_quantity = entered_amount * package_size
+    
+    
     if submitted:
         if problems:
             st.error(
@@ -169,11 +204,67 @@ try:
                 if item["days_left"] is not None
                 else None
             ),
+            "Status": item["status"],
             "Reason": reason,
             "Suggested order": item["suggested_order"],
         })
 
-    st.dataframe(display_rows, hide_index=True)
+    if display_rows:
+        report_df = pd.DataFrame(display_rows)
+
+        def color_status(column):
+            colors = {
+                "REORDER NOW": "background-color: #fee2e2; color: #991b1b;",
+                "ORDER SOON": "background-color: #fef3c7; color: #92400e;",
+                "OK": "background-color: #dcfce7; color: #166534;",
+            }
+            return [colors.get(value, "") for value in column]
+
+        styled_report = report_df.style.apply(
+            color_status,
+            subset=["Status"],
+        )
+
+        st.dataframe(styled_report, hide_index=True)
+    else:
+        st.info("No items match the selected filters.")
+        
+    reorder_rows = [
+        item for item in filtered_results
+        if item["status"] != "OK"
+    ]
+
+    export_columns = [
+        "item_id", "item_name", "category", "unit",
+        "quantity_on_hand", "daily_use", "days_left",
+        "status", "suggested_order",
+    ]
+
+    csv_buffer = io.StringIO()
+    writer = csv.DictWriter(
+        csv_buffer,
+        fieldnames=export_columns,
+        extrasaction="ignore",
+    )
+    writer.writeheader()
+
+    for item in reorder_rows:
+        export_item = dict(item)
+        export_item["days_left"] = (
+            round(item["days_left"], 2)
+            if item["days_left"] is not None
+            else ""
+        )
+        writer.writerow(export_item)
+
+    st.download_button(
+        label=f"Download reorder list ({len(reorder_rows)} items)",
+        data=csv_buffer.getvalue().encode("utf-8-sig"),
+        file_name="cafe_reorder_list.csv",
+        mime="text/csv",
+        disabled=not reorder_rows,
+    )
+    st.caption("Downloads include only items needing attention in the selected category.")
 
 except DataError as error:
     st.error(str(error))
