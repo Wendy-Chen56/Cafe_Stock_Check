@@ -263,12 +263,15 @@ The following browser checks were completed locally during development:
 - The downloaded CSV contained the updated milk values. A Dairy download contained only Whole milk under the tested stock counts.
 - Selecting Bakery with the attention filter showed no matching items and disabled download.
 - The installed environment returned `No broken requirements found.` from `python -m pip check`. This checks package dependencies, not application behavior.
+- After stopping and restarting the app, Whole milk remained at 6 L, with 0.6 days left and a suggested order of 64 L.
+- Entering -1 showed a minimum-value warning. After refreshing, Whole milk was still saved as 6 L.
+- Report numbers displayed one decimal place, while suggested orders displayed whole numbers.
 
 Earlier command-line checks covered sorting, filtering, export, existing-file protection, and invalid inputs. The previous version's 50 automated tests passed on October 24, 2026. Those scripts are not included in this package, and that result is not an automated test of the new browser app.
 
 A classmate followed the earlier README and got the command-line project running in about four minutes. That was a setup/run check, not a measured comparison with spreadsheet work. The browser version still needs a separate classmate usability check.
 
-The instructor asked for a browser report, guided stock entry, clearer status cues, and a stronger explanation of customer value. This version adds those interfaces around the original calculations. The feedback and initial plan are in [docs/instructor_feedback.md](docs/instructor_feedback.md). Earlier test records are in [docs/manual_test_checklist.md](docs/manual_test_checklist.md).
+The instructor asked for a browser report, guided stock entry, clearer status cues, and a stronger explanation of customer value. This version adds those interfaces around the original calculations. The instructor's feedback, completed changes, and local checks are recorded in[docs/instructor_feedback.md](docs/instructor_feedback.md). Earlier test records are in [docs/manual_test_checklist.md](docs/manual_test_checklist.md).
 
 ## Project files
 
