@@ -1,81 +1,139 @@
 # Demo Script
 
-## Introduction
+## Before the demonstration
 
-My project is called Cafe Stock Check. I built it to help the person closing a café figure out which supplies need to be ordered.
-
-It reads an inventory CSV and checks the stock against the reorder levels and daily usage. The sample data is made up, and the program runs locally without installing extra packages.
-
-## Run the default report
+Start the app from the project folder:
 
 ```powershell
-python src/main.py data/sample_inventory.csv
+python -m streamlit run app.py
 ```
 
-Here I have 20 items. Four are at or below their reorder levels, and another three may run out within three days. The program shows those seven items and leaves out the thirteen marked OK.
+Open the browser before presenting. Keep Streamlit running in the terminal.
 
-Let’s look at whole milk. There are 18 liters left, and the estimated daily use is 10 liters. That means it will last about 1.8 days.
+Check the current working inventory. Saved stock may differ from the original sample, so describe the values actually shown.
 
-The stock is still above its reorder level, but it is getting close to running out, so the program marks it ORDER SOON.
+Select All categories and turn off the attention-only filter. Keep this script open separately as speaking notes.
 
-The suggested order is 52 liters, based on the default stock target. Before actually ordering, the person would still need to check storage space and how long the milk will keep.
+## 1. Introduce the problem
 
-## Change the warning period
+My project is called Cafe Stock Check. It helps a café shift lead decide what to reorder before closing.
 
-```powershell
-python src/main.py data/sample_inventory.csv --warn-days 5
-```
+A stock count alone can be misleading. If there are 18 liters of milk but the café uses 10 liters a day, that is less than two days of stock.
 
-Now I’m changing the warning period from three days to five.
+The app brings the count, estimated days left, and reorder suggestion together so the shift lead can see what needs attention.
 
-Croissants, Lids, and Oat milk are added to the list, so there are ten items needing attention. The inventory is the same. I’m just asking the program to warn me earlier.
+The data is fictional. This is a local prototype, not a system already used by a working café.
 
-## Try a file with errors
+## 2. Explain what changed after feedback
 
-```powershell
-python src/main.py data/sample_with_errors.csv
-```
+[Show the browser.]
 
-This file has a few mistakes on purpose. For example, one quantity says “six” instead of using a number, and another row has a negative daily usage value.
+My first version showed a report in the terminal. Professor Solis asked me to think about how a café worker would use it.
 
-The program lists the problems and skips five rows. It can still analyze the three valid items.
+I added this browser interface and a stock-entry form. Workers can select an existing item instead of typing its name, ID, and category into a spreadsheet.
 
-This also tells me that the report is only based on part of the file. I would need to fix those errors and run it again to get the full list.
+I also added colored warnings and a reason for each status.
 
-## Export the reorder list
+## 3. Update a stock count
 
-```powershell
-python src/main.py data/sample_inventory.csv --export demo_orders.csv
-```
+[Select Whole milk. Choose Enter directly in L. Enter 25 and click Save stock.]
 
-Use a filename that does not already exist.
+Here I select Whole milk. The app already knows that it belongs to Dairy and is measured in liters.
 
-This saves the seven items needing attention to a CSV that I can open in a spreadsheet.
+I enter the total stock currently on hand, not an amount to add. I’ll save 25 liters.
 
-If I try the same filename again, the program refuses to overwrite it. That protects the file I already saved.
+[Point to Whole milk in the report.]
 
-The program prepares the list, but it does not place an order or send anything to a supplier.
+At 10 liters of use per day, that gives 2.5 days left. The app marks it ORDER SOON and suggests 45 liters under the default target.
 
-## Wrap up
+The shift lead still needs to check storage space and shelf life before placing an order.
 
-The idea is to make it easier to find the supplies that need attention without checking every row manually.
+## 4. Show container conversion
 
-I’ve tested the calculations and tried the main commands on my computer. I still need feedback from a classmate or the instructor to find out whether the report is clear and useful. I haven’t measured time savings yet.
+[Keep Whole milk selected. Choose 2 L container. Enter 3 and click Save stock.]
+
+Instead of entering liters directly, I can count containers. Three 2-liter containers become 6 liters.
+
+[Point to the updated milk row.]
+
+The report now shows 0.6 days left and REORDER NOW. The stock is below the milk's 12-liter reorder level.
+
+The suggested order is 64 liters because the default target is 70 liters and there are 6 liters left.
+
+This container size is an example for the dairy sample. It is not a complete supplier package catalog.
+
+## 5. Explain the warnings and download
+
+[Point to the Status and Reason columns.]
+
+Red means REORDER NOW, yellow means ORDER SOON, and green means OK. Each status also has a text label and an explanation.
+
+The program checks the reorder level first. That is why an item can have several days left and still be marked REORDER NOW.
+
+[Select Dairy in the report category filter.]
+
+I can focus on one category. The summary numbers above still count the full inventory; the filter changes this table and the download list.
+
+[Click Download reorder list and open the downloaded CSV.]
+
+The download includes only attention items in this category. With these stock counts, that is Whole milk.
+
+The app prepares a list for review. It does not place an order.
+
+## 6. Explain saving and validation
+
+The app saves stock counts in a separate working file, so the original sample stays available.
+
+I checked that saved counts remain after refreshing the browser and restarting the app.
+
+I also tried entering negative stock. The form blocked it, and the saved count did not change.
+
+[Optional: demonstrate -1 in direct entry, show the warning, then refresh to clear the invalid input.]
+
+## 7. Describe testing and feedback
+
+I checked the calculations with examples and compared the downloaded records with the report. I also tested filters, container conversion, empty results, and saving.
+
+A classmate followed the updated README and got the browser app running without my help. That check was not timed. I have not yet recorded detailed feedback on the form or report, or measured savings compared with spreadsheet work.
+
+## 8. Wrap up
+
+The main improvement is that the worker can now enter stock and review warnings in the browser instead of editing a spreadsheet and reading terminal output.
+
+I used ChatGPT and Claude for development help, then ran the code and checked the results myself. The app itself does not connect to an AI service.
+
+The next usability check is to ask someone to update a count, explain a warning, and download the list without guidance. That will tell me more than checking whether they can start the app.
 
 ## Possible questions
 
-**Why is Matcha REORDER NOW if it still has four days left?**
+### Why is one item REORDER NOW and another ORDER SOON when their days left are similar?
 
-Its stock is already below the reorder level. The program checks that first, before checking the days left.
+The first check compares stock with each item's reorder level. Only items above that level are checked against the three-day warning. The Reason column explains which rule applied.
 
-**Why does Oat milk change when you use a five-day warning?**
+### Why does the app suggest so much milk?
 
-It has five days of stock left. That is outside the three-day warning, but it is included when I change the setting to five days.
+The default target is the higher of seven days of usage or twice the reorder level. That is a simple rule, not an optimized purchasing decision. Storage space, shelf life, and delivery schedules still need human review.
 
-**Why does the program suggest seven kilograms of Espresso beans?**
+### Why use this instead of Excel?
 
-The target is 10.5 kilograms, and there are four kilograms left. The difference is 6.5, which the program rounds up to seven.
+The browser gives workers a guided way to enter counts and immediately review stock warnings. Item details are already filled in. Excel can do similar calculations, but this app puts the entry and review steps together. I have not measured which approach is faster.
 
-**Does the program predict demand?**
+### Does a worker still need Python?
 
-No. It uses the daily usage estimate in the CSV. If that estimate is wrong or demand changes, the result may not reflect what actually happens.
+The computer hosting this local app needs Python and the required packages. Once Streamlit is running, workers use the browser interface. I have not deployed a public website.
+
+### Where are stock changes stored?
+
+They are stored in data/working_inventory.csv on the computer running the app. That file is excluded from Git. It is not shared cloud storage.
+
+### Does it predict demand or automatically subtract daily use?
+
+No. Daily usage is an estimate used to calculate days left. Stock changes when someone saves a new count.
+
+### Does selecting a 2 L container change the order suggestion into containers?
+
+No. It converts the stock count into liters. Suggested orders still use the item's stock unit and are not rounded to supplier package sizes.
+
+### What Python concepts did you use?
+
+Functions separate the main tasks. Lists and dictionaries hold inventory records. Loops and conditions check records and assign statuses. Exception handling reports expected problems, and CSV reading and writing handle storage and exports.

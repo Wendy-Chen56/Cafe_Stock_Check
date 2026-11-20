@@ -9,43 +9,77 @@ Cafe Stock Check
 
 ## Objective
 
-I’m building a Python program to help the person closing a café figure out which supplies need to be ordered. Instead of checking every row in a spreadsheet, they can run the program and get a list of items that are low in stock or may run out soon.
+Cafe Stock Check helps a café shift lead decide which supplies to reorder before closing. Instead of editing inventory rows in a spreadsheet, workers can select an item in a browser, enter the current stock, and review the supplies that need attention.
 
-I want to see whether this makes the task faster and helps people miss fewer items. I plan to ask classmates to try both the spreadsheet and the program, then compare their time and answers. I haven’t done that comparison yet.
+The goal is to reduce repeated typing and make stock decisions easier to follow. The app shows estimated days left, explains why an item is flagged, and suggests an order quantity for the shift lead to review.
+
+I check the calculations against worked examples and ask classmates to follow the instructions. These checks help me assess whether the program works and can be started by another person. I have not measured whether it is faster or more accurate than using a spreadsheet.
 
 ## Dataset link
 
-I’m using sample data for this project, so there is no external dataset link.
+No external dataset is used. The project includes two sample files:
 
-- `data/sample_inventory.csv` contains 20 made-up café supplies.
-- `data/sample_with_errors.csv` contains eight rows, with five rows that have errors for testing.
+- `data/sample_inventory.csv`: 20 fictional café supplies.
+- `data/sample_with_errors.csv`: eight rows, including five with deliberate errors.
 
-Neither file contains real café or customer information.
+Neither file contains actual café or customer records.
+
+The browser initially loads the sample inventory. Stock changes are saved separately in `data/working_inventory.csv`, which is excluded from Git.
 
 ## Data and product
 
-Each row includes an item’s ID, name, category, unit, current stock, estimated daily use, and reorder level.
+Each inventory record contains an item ID, name, category, stock unit, quantity on hand, estimated daily usage, and reorder level.
 
-The program does three main things:
+The app has three main features:
 
-1. Reads the CSV and reports problems such as missing values, negative numbers, or duplicate IDs. It skips invalid rows and continues with the valid ones.
-2. Calculates how many days the stock may last, labels each item REORDER NOW, ORDER SOON, or OK, and suggests how much to order. Users can also sort the list or select a category.
-3. Saves the items needing attention to a new CSV. It won’t overwrite a file that already exists.
+1. **Enter and save stock counts.** Workers select an existing item from a dropdown. The app displays its category and unit automatically. Workers enter the total stock on hand and save it without editing the CSV themselves. Dairy items also have an example 2 L container option that converts container counts into liters.
 
-For example, the sample has 18 liters of whole milk, and the café uses about 10 liters a day. That leaves only 1.8 days of milk. The program marks it ORDER SOON and suggests ordering 52 liters under the default rules. The person ordering still needs to check whether that amount makes sense for the café’s storage space and how long the milk will keep.
+2. **Review stock warnings.** The report calculates days left, assigns REORDER NOW, ORDER SOON, or OK, and suggests an order quantity. Statuses have both colors and text labels, with a Reason column explaining each decision. Workers can filter by category or show only items needing attention.
 
-## Scope
+3. **Download a reorder list.** Workers can download the attention items in the selected category as a CSV. The download is disabled when there are no matching attention items.
 
-The program runs in a terminal and uses Python’s standard library, so there are no extra packages to install. It uses the functions, lists, dictionaries, loops, conditions, error handling, and file operations covered in class.
+For example, the original sample has 18 L of whole milk and estimated usage of 10 L a day. That gives 1.8 days of stock. It is above its 12 L reorder level, so the app marks it ORDER SOON under the default three-day warning.
 
-It works with the numbers entered in the CSV. It doesn’t predict future demand, contact suppliers, or place orders.
+The default stock target is the higher of seven days of use or twice the reorder level. For milk, that target is 70 L, giving a suggested order of 52 L. The shift lead still needs to consider fridge space and shelf life before ordering.
 
-The café is an example for this project. I haven’t tested the program in a working café, so I can’t say yet how much time or money it would save there.
+## Scope and implementation
 
-## Progress
+The main interface is a local Streamlit browser app. Its package versions are listed in `requirements.txt`. The original command-line program remains available and uses the same calculation functions.
 
-I’ve run the program on Windows with Python 3.13.9. I checked the sample report, sorting, category filter, five-day warning, and CSV export. I also tried the error file and confirmed that an existing export file could not be overwritten.
+The project uses these course concepts:
 
-On October 24, 2026, I ran the earlier version’s 50 automated tests. All passed.
+- Functions separate loading, validation, calculations, and saving across the files in `src`.
+- Lists and dictionaries hold inventory records and validation messages.
+- Loops and conditions process items and assign stock statuses in `src/reports.py`.
+- Exception handling turns expected file and calculation problems into readable messages.
+- File input and output load inventory, save working counts, and produce reorder CSVs.
 
-Next, I’ll get feedback from a classmate or the instructor to see whether the report is clear and useful, then decide what needs improvement.
+The browser app uses a fixed sample item catalog. It does not currently provide screens for adding new products or changing daily usage and reorder levels. The container option is a demonstration of stock conversion, not a verified supplier catalog.
+
+The app does not forecast demand, track stock usage automatically, contact suppliers, or place orders. It runs locally and has not been deployed as a public website.
+
+## Testing and limitations
+
+I tested the project on Windows with Python 3.13.9.
+
+The original sample produced 4 REORDER NOW, 3 ORDER SOON, and 13 OK items. I checked filtering, exports, and invalid-input examples in the command-line version.
+
+For the browser app, I checked stock updates, container conversion, status colors, filtering, CSV downloads, and empty results. Entering three 2 L containers saved 6 L. The milk report then showed 0.6 days left, REORDER NOW, and a suggested order of 64 L.
+
+Saved stock remained after refreshing and restarting the app. Entering -1 triggered a minimum-value warning and did not change the saved inventory.
+
+The earlier version's 50 automated tests passed on October 24, 2026. Those tests do not cover the new browser interface.
+
+The browser download follows the browser's file-saving behavior. The original command-line export separately refuses to overwrite an existing file.
+
+This is a local, single-user prototype using fictional data. It does not account for delivery time, expiry dates, storage capacity, or cost. Suggested orders are rounded to whole stock units, not supplier package sizes. I have not tested it in a working café or measured business savings.
+
+## Progress and feedback
+
+Professor Solis asked me to move the report into a browser, add guided inventory entry, make stock warnings easier to notice, and explain the benefit from the customer's point of view.
+
+I added the browser report, stock form, item dropdown, container conversion, status colors, explanations, and download button in response. The completed changes and checks are recorded in `docs/instructor_feedback.md`.
+
+A classmate followed the earlier command-line README and got the program running in about four minutes. A classmate also followed the updated README and started the browser app without my help. The browser check was not timed, and specific feedback on the form and report has not yet been recorded.
+
+The next evaluation step is to ask a classmate to update a stock count, explain a flagged item, and download the reorder list. I will record any help needed or confusing steps. This will provide more information about usability than the setup check alone.
