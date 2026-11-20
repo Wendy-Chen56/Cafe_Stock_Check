@@ -45,17 +45,12 @@ The meeting helped me see that explaining the code is different from showing som
 
 The status explanation also matters. Similar days-left values can have different statuses because the program checks each item's reorder level first.
 
-## What still needs checking
+## Classmate check and current status
 
-A classmate previously followed the command-line README and got the program running in about four minutes. That was a setup check for the earlier version.
+A classmate followed the earlier command-line README and got the program running in about four minutes.
 
-I checked negative stock entry: the form rejected -1, and the saved count remained unchanged. Saved counts also remained available after stopping and restarting the app.
+A classmate also followed the updated README and got the browser app running without my help. This check was not timed. I have not yet recorded specific feedback on the form or report.
 
-The browser app runs locally and still needs Python and the packages installed on the host computer. It has not been deployed as a public website.
+I also checked that negative stock entry was blocked and did not change the saved inventory. Saved counts remained available after stopping and restarting the app.
 
-These updates have been implemented and checked locally. I have not yet received Professor Solis's review of this version.
-
-| Stop and restart the app | Whole milk remained at 6 L, with 0.6 days left and a suggested order of 64 L |
-| Startup import order | Fixed a missing-module error by adding the src path before importing inventory_store |
-| Report number formatting | Stock, daily use, and days left display one decimal place; suggested orders display whole numbers |
-| Negative stock entry | Entering -1 showed a minimum-value warning; after refreshing, Whole milk remained at 6 L |
+The browser app runs locally and requires Python and the listed packages on the computer running it. It has not been deployed as a public website.

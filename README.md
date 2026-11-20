@@ -269,7 +269,7 @@ The following browser checks were completed locally during development:
 
 Earlier command-line checks covered sorting, filtering, export, existing-file protection, and invalid inputs. The previous version's 50 automated tests passed on October 24, 2026. Those scripts are not included in this package, and that result is not an automated test of the new browser app.
 
-A classmate followed the earlier README and got the command-line project running in about four minutes. That was a setup/run check, not a measured comparison with spreadsheet work. The browser version still needs a separate classmate usability check.
+A classmate followed the earlier README and got the command-line project running in about four minutes. That was a setup/run check, not a measured comparison with spreadsheet work. A classmate also followed the updated README and got the browser app running without my help. This check was not timed.
 
 The instructor asked for a browser report, guided stock entry, clearer status cues, and a stronger explanation of customer value. This version adds those interfaces around the original calculations. The instructor's feedback, completed changes, and local checks are recorded in[docs/instructor_feedback.md](docs/instructor_feedback.md). Earlier test records are in [docs/manual_test_checklist.md](docs/manual_test_checklist.md).
 
